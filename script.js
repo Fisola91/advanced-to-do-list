@@ -4,12 +4,26 @@ const form = document.querySelector("#new-todo-form");
 const formInput = document.querySelector("#todo-input");
 const list = document.querySelector("#list");
 const template = document.querySelector("#list-item-template");
+
 const TODO_STORAGE_KEY = "ADVANCED-TODO-LIST-todos";
-const todos = loadTodos();
+let todos = loadTodos();
+
+list.addEventListener("click", (e) => {
+  const button = e.target.matches("[data-button-delete]");
+  if (!button) return;
+
+  const parent = e.target.closest(".list-item");
+  const todoId = parent.dataset.todoId;
+  parent.remove();
+  todos = todos.filter((todo) => todo.id !== todoId);
+  saveTodos();
+  //
+});
 
 todos.forEach((todo) => renderTodo(todo));
 // todos.forEach(renderTodo); // This works too
 
+// complete Todos
 list.addEventListener("change", (e) => {
   if (!e.target.matches("[data-list-item-checkbox]")) return;
   const parent = e.target.closest(".list-item");
@@ -17,7 +31,6 @@ list.addEventListener("change", (e) => {
   const todo = todos.find((todo) => todo.id === todoId);
   todo.complete = e.target.checked;
   saveTodos();
-  console.log(todo);
 });
 
 form.addEventListener("submit", (e) => {
@@ -58,5 +71,3 @@ function loadTodos() {
   const todosString = localStorage.getItem(TODO_STORAGE_KEY);
   return JSON.parse(todosString) || [];
 }
-
-// complete Todos
