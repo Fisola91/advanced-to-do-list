@@ -1,38 +1,12 @@
-// A. Add Todos
-// 1. select necessary elements
+// select necessary elements
 const form = document.querySelector("#new-todo-form");
 const formInput = document.querySelector("#todo-input");
 const list = document.querySelector("#list");
 const template = document.querySelector("#list-item-template");
-
 const TODO_STORAGE_KEY = "ADVANCED-TODO-LIST-todos";
 let todos = loadTodos();
 
-list.addEventListener("click", (e) => {
-  const button = e.target.matches("[data-button-delete]");
-  if (!button) return;
-
-  const parent = e.target.closest(".list-item");
-  const todoId = parent.dataset.todoId;
-  parent.remove();
-  todos = todos.filter((todo) => todo.id !== todoId);
-  saveTodos();
-  //
-});
-
-todos.forEach((todo) => renderTodo(todo));
-// todos.forEach(renderTodo); // This works too
-
-// complete Todos
-list.addEventListener("change", (e) => {
-  if (!e.target.matches("[data-list-item-checkbox]")) return;
-  const parent = e.target.closest(".list-item");
-  const todoId = parent.dataset.todoId;
-  const todo = todos.find((todo) => todo.id === todoId);
-  todo.complete = e.target.checked;
-  saveTodos();
-});
-
+// A. Add Todos
 form.addEventListener("submit", (e) => {
   e.preventDefault();
 
@@ -71,3 +45,29 @@ function loadTodos() {
   const todosString = localStorage.getItem(TODO_STORAGE_KEY);
   return JSON.parse(todosString) || [];
 }
+
+todos.forEach((todo) => renderTodo(todo));
+// todos.forEach(renderTodo); // This works too
+
+// complete Todos
+list.addEventListener("change", (e) => {
+  if (!e.target.matches("[data-list-item-checkbox]")) return;
+  const parent = e.target.closest(".list-item");
+  const todoId = parent.dataset.todoId;
+  const todo = todos.find((todo) => todo.id === todoId);
+  todo.complete = e.target.checked;
+  saveTodos();
+});
+
+// delete to do
+list.addEventListener("click", (e) => {
+  const button = e.target.matches("[data-button-delete]");
+  if (!button) return;
+
+  const parent = e.target.closest(".list-item");
+  const todoId = parent.dataset.todoId;
+  parent.remove();
+  todos = todos.filter((todo) => todo.id !== todoId);
+  saveTodos();
+  //
+});
